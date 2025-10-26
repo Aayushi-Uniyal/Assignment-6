@@ -1,69 +1,55 @@
-#include <iostream>
+#include<iostream>
 using namespace std;
 
-struct Node {
-    int data;
-    Node *next, *prev;
-};
-Node *head = NULL, *tail = NULL;
+struct Node { int data; Node *prev, *next; };
+Node* head = NULL;
 
-void insertFirst(int val) {
-    Node *t = new Node{val, NULL, NULL};
-    if (!head) head = tail = t;
+void insertEnd(int x){
+    Node* t = new Node{x, NULL, NULL};
+    if(!head) head = t;
     else {
-        t->next = head;
-        head->prev = t;
-        head = t;
+        Node* p = head;
+        while(p->next) p = p->next;
+        p->next = t;
+        t->prev = p;
     }
 }
 
-void insertLast(int val) {
-    Node *t = new Node{val, NULL, NULL};
-    if (!tail) head = tail = t;
-    else {
-        tail->next = t;
-        t->prev = tail;
-        tail = t;
-    }
-}
-
-void deleteNode(int val) {
-    Node *p = head;
-    while (p && p->data != val) p = p->next;
-    if (!p) { cout << "Node not found\n"; return; }
-    if (p == head) head = head->next;
-    if (p == tail) tail = tail->prev;
-    if (p->prev) p->prev->next = p->next;
-    if (p->next) p->next->prev = p->prev;
+void del(int x){
+    Node* p = head;
+    while(p && p->data != x) p = p->next;
+    if(!p) return;
+    if(p->prev) p->prev->next = p->next;
+    if(p->next) p->next->prev = p->prev;
+    if(p == head) head = p->next;
     delete p;
 }
 
-void searchNode(int val) {
-    Node *p = head;
-    while (p) {
-        if (p->data == val) { cout << "Found\n"; return; }
+void search(int x){
+    Node* p = head;
+    while(p){
+        if(p->data == x){ cout << "Found\n"; return; }
         p = p->next;
     }
     cout << "Not Found\n";
 }
 
-void display() {
-    Node *p = head;
-    while (p) { cout << p->data << " "; p = p->next; }
+void display(){
+    for(Node* p = head; p; p = p->next)
+        cout << p->data << " ";
     cout << endl;
 }
 
-int main() {
-    int choice, val;
-    do {
-        cout << "\n1.Insert First\n2.Insert Last\n3.Delete Node\n4.Search\n5.Display\n6.Exit\n";
-        cin >> choice;
-        switch(choice) {
-            case 1: cout << "Enter value: "; cin >> val; insertFirst(val); break;
-            case 2: cout << "Enter value: "; cin >> val; insertLast(val); break;
-            case 3: cout << "Enter value to delete: "; cin >> val; deleteNode(val); break;
-            case 4: cout << "Enter value to search: "; cin >> val; searchNode(val); break;
-            case 5: display(); break;
+int main(){
+    int ch, x;
+    do{
+        cout << "\n1.Insert  2.Delete  3.Search  4.Display  5.Exit\n";
+        cin >> ch;
+        switch(ch){
+            case 1: cout << "Enter value: "; cin >> x; insertEnd(x); break;
+            case 2: cout << "Enter value to delete: "; cin >> x; del(x); break;
+            case 3: cout << "Enter value to search: "; cin >> x; search(x); break;
+            case 4: display(); break;
         }
-    } while (choice != 6);
+    } while(ch != 5);
 }
